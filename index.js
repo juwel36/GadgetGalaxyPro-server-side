@@ -61,7 +61,25 @@ app.get('/products/brand/:brandname', async (req, res) => {
   res.send(products);
 });
 
-
+// update
+app.put('/products/:id', async(req,res)=>{
+const id =req.params.id;
+const filter = {_id: new ObjectId(id)}
+const options={upsert:true}
+const updateuser=req.body;
+const user ={
+  $set:{
+    image:updateuser.image,
+    name:updateuser.name,
+    brandname:updateuser.brandname,
+    product:updateuser.product,
+    price:updateuser.price,
+    rating:updateuser.rating,
+  }
+  }
+  const result = await gadgetcollection.updateOne(filter,user,options)
+  res.send(result)
+})
 
 
 
