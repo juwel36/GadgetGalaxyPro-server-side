@@ -54,6 +54,13 @@ res.send(user)
 })
 
 
+app.get('/products/brand/:brandname', async (req, res) => {
+  const brandname = req.params.brandname;
+  const query = { brandname }; 
+  const products = await gadgetcollection.find(query).toArray();
+  res.send(products);
+});
+
 
 
 
