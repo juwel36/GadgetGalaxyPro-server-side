@@ -27,6 +27,22 @@ async function run() {
     await client.connect();
 
     const gadgetcollection =client.db("GadgetDB").collection("products")
+    const cartCollection = client.db("GadgetDB").collection("cart");
+
+
+
+app.post('/cart', async (req, res) => {
+  const product = req.body; 
+  const result = await cartCollection.insertOne(product);
+  res.send(result);
+});
+
+
+app.get('/cart', async (req, res) => {
+  const items = await cartCollection.find().toArray();
+  res.send(items);
+});
+
 
 
 
