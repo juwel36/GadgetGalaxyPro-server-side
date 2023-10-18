@@ -1,3 +1,5 @@
+
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const express = require('express')
 const cors= require('cors')
 const app = express()
@@ -8,8 +10,6 @@ app.use(cors())
 app.use(express.json())
 
 
-
-const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://GadgetGalaxyPro:JYpW6gd5BRQHTjGi@cluster0.9ofe0jv.mongodb.net/?retryWrites=true&w=majority";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -44,6 +44,17 @@ app.post('/products',async(req,res)=>{
   res.send(result)
   
   })
+// 
+// update.1
+app.get('/products/:id',async(req,res)=>{
+const id = req.params.id
+const query = {_id:new ObjectId(id)}
+const user=await gadgetcollection.findOne(query)
+res.send(user)
+})
+
+
+
 
 
 
