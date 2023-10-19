@@ -28,30 +28,46 @@ async function run() {
 
     const gadgetcollection =client.db("GadgetDB").collection("products")
     const cartCollection = client.db("GadgetDB").collection("cart");
+    const ProductCollection = client.db("GadgetDB").collection("trendingProduct")
+    const reviewCollection = client.db("GadgetDB").collection("review")
+    
 
-
-
-app.post('/cart', async (req, res) => {
-  const product = req.body; 
-  const result = await cartCollection.insertOne(product);
-  res.send(result);
-});
-
-
-app.get('/cart', async (req, res) => {
-  const items = await cartCollection.find().toArray();
-  res.send(items);
-});
-
-
-
-
-    // read
-app.get('/products',async(req,res)=>{
-  const cursor= gadgetcollection.find()
-  const result= await cursor.toArray()
-  res.send(result)
+    
+    
+        // read
+    app.get('/trending',async(req,res)=>{
+      const cursor= ProductCollection.find()
+      const result= await cursor.toArray()
+      res.send(result)
+      })
+    
+        // read
+    app.get('/products',async(req,res)=>{
+      const cursor= gadgetcollection.find()
+      const result= await cursor.toArray()
+      res.send(result)
+      })
+    
+// 
+// update.1
+app.get('/products/:id',async(req,res)=>{
+  const id = req.params.id
+  const query = {_id:new ObjectId(id)}
+  const user=await gadgetcollection.findOne(query)
+  res.send(user)
   })
+  
+  
+  app.get('/products/brand/:brandname', async (req, res) => {
+    const brandname = req.params.brandname;
+    const query = { brandname }; 
+    const products = await gadgetcollection.find(query).toArray();
+    res.send(products);
+  });
+
+
+
+
 
 // create
 app.post('/products',async(req,res)=>{
@@ -60,22 +76,7 @@ app.post('/products',async(req,res)=>{
   res.send(result)
   
   })
-// 
-// update.1
-app.get('/products/:id',async(req,res)=>{
-const id = req.params.id
-const query = {_id:new ObjectId(id)}
-const user=await gadgetcollection.findOne(query)
-res.send(user)
-})
 
-
-app.get('/products/brand/:brandname', async (req, res) => {
-  const brandname = req.params.brandname;
-  const query = { brandname }; 
-  const products = await gadgetcollection.find(query).toArray();
-  res.send(products);
-});
 
 // update
 app.put('/products/:id', async(req,res)=>{
@@ -96,6 +97,40 @@ const user ={
   const result = await gadgetcollection.updateOne(filter,user,options)
   res.send(result)
 })
+
+
+app.get('/cart/:id',async(req,res)=>{
+const id = req.params.id
+
+const query = {_id:new ObjectId(id)}
+const user=await cartCollection.findOne(query)
+res.send(user)
+})
+
+
+// delete
+app.delete('/cart/:id',async(req,res)=>{
+const id =req.params.id;
+console.log("hitting",id);
+const query = {_id: new ObjectId(id)}
+const result=await cartCollection.deleteOne(query)
+res.send(result)
+})
+
+
+app.get('/cart',async(req,res)=>{
+  const cursor= cartCollection.find()
+  const result= await cursor.toArray()
+  res.send(result)
+  })
+  
+  app.post('/cart', async (req, res) => {
+    const product = req.body; 
+    const result = await cartCollection.insertOne(product);
+    res.send(result);
+  });
+  
+  
 
 
 
