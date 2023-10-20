@@ -1,6 +1,7 @@
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const express = require('express')
+require('dotenv').config()
 const cors= require('cors')
 const app = express()
 const port =  process.env.PORT || 5000
@@ -32,6 +33,14 @@ async function run() {
     const reviewCollection = client.db("GadgetDB").collection("review")
     
 
+    
+    
+        // read
+    app.get('/review',async(req,res)=>{
+      const cursor= reviewCollection.find()
+      const result= await cursor.toArray()
+      res.send(result)
+      })
     
     
         // read
@@ -99,20 +108,12 @@ const user ={
 })
 
 
-app.get('/cart/:id',async(req,res)=>{
-const id = req.params.id
-
-const query = {_id:new ObjectId(id)}
-const user=await cartCollection.findOne(query)
-res.send(user)
-})
-
 
 // delete
 app.delete('/cart/:id',async(req,res)=>{
 const id =req.params.id;
 console.log("hitting",id);
-const query = {_id: new ObjectId(id)}
+const query = {_id: (id)}
 const result=await cartCollection.deleteOne(query)
 res.send(result)
 })
